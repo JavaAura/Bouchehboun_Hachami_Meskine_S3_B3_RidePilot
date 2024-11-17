@@ -1,7 +1,7 @@
 package com.YC.RidePilot.entity;
 
 import jakarta.persistence.Embeddable;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Embeddable
@@ -11,10 +11,10 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class Address {
-    @NotNull(message = "City is required")
+
+    @NotBlank(message = "City is required")
     private String ville;
 
-    @NotNull(message = "Neighborhood is required")
+    @NotBlank(message = "Neighborhood is required")
     private String quartier;
-
 }

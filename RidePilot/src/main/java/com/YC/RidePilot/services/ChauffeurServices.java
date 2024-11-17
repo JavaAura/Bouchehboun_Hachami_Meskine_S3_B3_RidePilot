@@ -2,11 +2,13 @@ package com.YC.RidePilot.services;
 
 import com.YC.RidePilot.dao.ChauffeurAnalyticsDao;
 import com.YC.RidePilot.entity.Chauffeur;
+import com.YC.RidePilot.entity.Reservation;
 import com.YC.RidePilot.entity.dto.ChauffeurAnalyticsDto;
 import com.YC.RidePilot.entity.dto.ChauffeurDto;
 import com.YC.RidePilot.entity.mapper.ChauffeurMapperDTO;
 import com.YC.RidePilot.enums.StatutChauffeur;
 import com.YC.RidePilot.repository.ChauffeurRepo;
+import com.YC.RidePilot.repository.ReservationRepository;
 import com.YC.RidePilot.services.InterfacesServices.ChauffeurInterfaces;
 import com.YC.RidePilot.exception.Chauffeur.NotFoundException;
 import com.YC.RidePilot.exception.Chauffeur.ValidationException;
@@ -27,6 +29,7 @@ public class ChauffeurServices implements ChauffeurInterfaces {
     private final ChauffeurRepo chauffeurRepository;
 
     private  ChauffeurMapperDTO chauffeurMapper = ChauffeurMapperDTO.INSTANCE;
+    private final ReservationRepository reservationRepository;
     private final ChauffeurAnalyticsDao chauffeurAnalyticsDao;
 
     @Override
@@ -135,5 +138,27 @@ public class ChauffeurServices implements ChauffeurInterfaces {
             .build();
     }
 
+    @Override
+    public ChauffeurDto verifyAvailability(Long chauffeurId) {
+        // Fetch the chauffeur details from the database (assuming you have a Chauffeur entity)
+        Chauffeur chauffeur = chauffeurRepository.findById(chauffeurId)
+                .orElseThrow(() -> new NotFoundException("Chauffeur not found with id: " + chauffeurId));
+        if(chauffeur.getStatut().equals("DISPONIBLE")){
+            throw new RuntimeException("Chauffeur n'est pas disponible");
+        }
+
+
+
+        List<Reservation> ongoingReservations = reservationRepository.findOngoingReservationsForChauffeur(chauffeurId);
+
+        boolean isAvailable = ongoingReservations.isEmpty();
+
+        // If the chauffeur is available, map the Chauffeur entity to a ChauffeurDto
+        if (isAvailable) {
+            return ChauffeurMapperDTO.INSTANCE.toDto(chauffeur);
+        } else {
+            return null;
+        }
+    }
 
 }

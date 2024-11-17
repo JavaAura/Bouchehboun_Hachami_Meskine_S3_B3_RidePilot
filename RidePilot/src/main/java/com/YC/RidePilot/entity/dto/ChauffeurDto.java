@@ -29,12 +29,10 @@ public class ChauffeurDto {
 
     @NotNull(message = "La date de début de disponibilité est obligatoire")
     @Future(message = "La date de début doit être dans le futur")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime disponibiliteDebut;
 
     @NotNull(message = "La date de fin de disponibilité est obligatoire")
     @Future(message = "La date de fin doit être dans le futur")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime disponibiliteFin;
 
 }

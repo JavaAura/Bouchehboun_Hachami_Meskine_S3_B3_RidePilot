@@ -15,4 +15,6 @@ public interface ChauffeurInterfaces {
     long countChauffeurs();
     ChauffeurAnalyticsDto getAnalytics();
 
+    ChauffeurDto verifyAvailability(Long chauffeurId);
+
 }
